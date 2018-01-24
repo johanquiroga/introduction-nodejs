@@ -11,8 +11,7 @@ fs.readFile(path.join(__dirname, '/data/customers.csv'), {encoding: 'utf-8'}, fu
 /**
  * Write to a file
  */
-const fs = require('fs')
-fs.writeFile('message.txt', 'Hello World!', function (error) {
+fs.writeFile('message.txt', 'Hello World!\n', function (error) {
   if (error) return console.error(error)
   console.log('Writing is done.')
 })
