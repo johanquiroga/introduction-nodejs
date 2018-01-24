@@ -4,6 +4,11 @@
 const path = require('path')
 
 // Relative path
-const server = require(path.join('app', 'server.js'))
+const relativeServer = path.join('app', 'server.js')
+console.log(relativeServer)
+// const server = require(relativeServer)
+
 // Absolute path
-const server = require(path.join(__dirname, 'app', 'server.js'))
+const absoluteServer = path.join(__dirname, 'app', 'server.js')
+console.log(absoluteServer)
+// const server = require(absoluteServer)
