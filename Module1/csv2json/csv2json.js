@@ -7,7 +7,7 @@ const convertToJson = (csvPath = path.join(__dirname, 'customer-data.csv')) => {
     console.log('Converting', csvPath)
 
     let jsonData = {}
-    let jsonFile = csvPath.substr(0, csvPath.lastIndexOf(".")) + ".json"
+    const jsonFile = csvPath.substr(0, csvPath.lastIndexOf(".")) + ".json"
 
     converter.fromFile(csvPath)
         .on('end_parsed', (jsonObj) => {
