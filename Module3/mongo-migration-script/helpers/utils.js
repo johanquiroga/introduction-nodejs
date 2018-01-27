@@ -14,8 +14,8 @@ module.exports = {
         let chunks = []
         let dataSize = data.length
 
-        for (let i = 0; i < dataSize; i += chunkSize) {
-            chunks.push(data.slice(i, i + chunkSize))
+        for (let i = 0; i < Math.ceil(dataSize / chunkSize); i++) {
+            chunks.push(data.slice(i*chunkSize, (i + 1) * chunkSize))
         }
 
         return chunks
