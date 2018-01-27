@@ -2,56 +2,39 @@ const mongoose = require('mongoose')
 mongoose.Promise = global.Promise
 mongoose.connect('mongodb://localhost:27017/edx-course-db')
 
-const bookSchema = mongoose.Schema({ name: String })
-
-bookSchema.method({
-    buy(quantity, customer, callback) {
-        var bookToPurchase = this
-        console.log('buy')
-        return callback()
-    },
-    refund(customer, callback) {
-        // process the refund
-        console.log('refund')
-        return callback()
-    }
+const bookSchema = mongoose.Schema({
+    name: String,
+    published: Boolean,
+    createdAt: Date,
+    updatedAt: {type: Date, default: Date.now},
+    email: String,
+    reviews: [mongoose.Schema.Types.Mixed]
 })
 
-bookSchema.static({
-    getZeroInventoryReport(callback) {
-        // run a query on all books and get the ones with zero inventory
-        console.log('getZeroInventoryReport')
-        let books = []
-        return callback(books)
-    },
-    getCountOfBooksById(bookId, callback) {
-        // run a query and get the number of books left for a given books
-        console.log('getCountOfBooksById')
-        let count = 0
-        return callback(count)
-    }
-})
-
-bookSchema.post('save', function(doc) {
-    // prepare for saving
-    console.log(doc)
-    console.log('post save')
-})
-
-bookSchema.pre('remove', function(next) {
-    // prepare for removing
-    console.log('pre remove')
-    return next()
-})
+bookSchema.virtual('authorPhotoUrl')
+    .get(function() {
+        if (!this.email) return null
+        var crypto = require('crypto')
+        email = this.email
+        email = email.trim()
+        email = email.toLowerCase()
+        var hash = crypto
+            .createHash('md5')
+            .update(email)
+            .digest('hex')
+        var gravatarBaseUrl = 'https://secure.gravatar.com/avatar/'
+        return gravatarBaseUrl + hash
+    })
 
 let Book = mongoose.model('Book', bookSchema)
-Book.getZeroInventoryReport(() => {})
-Book.getCountOfBooksById(123, () => {})
 
-let practicalNodeBook = new Book({name: 'Practical Node.js, 2nd Edition'})
-
-practicalNodeBook.buy(1, 2, () => {})
-practicalNodeBook.refund(1, () => {})
+let practicalNodeBook = new Book({
+    name: 'Practical Node.js, 2nd Edition',
+    author: 'Azat',
+    email: 'quirogacj@gmail.com',
+    link: 'https://github.com/azat-co/practicalnode',
+    createdAt: Date.now()
+})
 
 practicalNodeBook.save((err, results) => {
     if (err) {
@@ -59,13 +42,7 @@ practicalNodeBook.save((err, results) => {
         process.exit(1)
     } else {
         console.log('Saved:', results)
-        practicalNodeBook.remove((error, results) => {
-            if (error) {
-                console.error(error)
-                process.exit(1)
-            } else {
-                process.exit(0)
-            }
-        })
+        console.log('Book author photo:', practicalNodeBook.authorPhotoUrl)
+        practicalNodeBook.remove(process.exit)
     }
 })
