@@ -1,10 +1,21 @@
 const mongoose = require('mongoose')
+mongoose.Promise = global.Promise
+mongoose.connect('mongodb://localhost:27017/edx-course-db')
 
-mongoose.connect('mongodb://localhost/test')
+let Book = mongoose.model('Book', {
+    name: String,
+    published: Boolean,
+    createdAt: Date,
+    updatedAt: {type: Date, default: Date.now}
+})
 
-let Book = mongoose.model('Book', { name: String })
-
-let practicalNodeBook = new Book({name: 'Practical Node.js, 2nd Edition'})
+let practicalNodeBook = new Book({
+    name: 'Practical Node.js, 2nd Edition',
+    author: 'Azat',
+    link: 'https://github.com/azat-co/practicalnode',
+    createdAt: Date.now()
+})
+console.log('Is new?', practicalNodeBook.isNew)
 
 practicalNodeBook.save((err, results) => {
     if (err) {
@@ -12,6 +23,13 @@ practicalNodeBook.save((err, results) => {
         process.exit(1)
     } else {
         console.log('Saved:', results)
-        process.exit(0)
+        console.log('Is new?', practicalNodeBook.isNew)
+        Book.findOne({_id: practicalNodeBook.id}, (error, bookDoc) => {
+            console.log(bookDoc.toJSON())
+            console.log(bookDoc.id)
+            bookDoc.published = true
+            // bookDoc.save(console.log)
+            bookDoc.remove(process.exit)
+        })
     }
 })
