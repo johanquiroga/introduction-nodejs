@@ -56,7 +56,7 @@ This come with Node.js and don’t need to be installed. They provide low-level 
 - `assert`: module to perform assertion based testing
 - `crypto`: module to encrypt and hash information
 
-`**fs**`
+**`fs`**
 Handles file system operations such as reading to and and writing from files.
 
 - `fs.readFile()`: reads files asynchronously
@@ -64,7 +64,7 @@ Handles file system operations such as reading to and and writing from files.
 
 [Read Documentation](http://nodejs.org/api/fs.html)
 
-`**path**`
+**`path`**
 Used to work with file and folder paths so that the code works seamlessly on any platform.
 
 - `path.join()`: used to create paths that are platform independent
@@ -97,7 +97,7 @@ Node provides a core module `[http](https://nodejs.org/api/http.html)` to make H
 The `http` core module methods allow you to specify what type of request you want to make. To do so, first create an `options` object and set the `method` attribute to the desired request type (‘POST’, 'GET', etc.), also you can specify other properties such as hostname, port, path, headers. Then, use the `options` object as the first argument when calling `http.request()`.
 For creating a server read this [Documentation](https://nodejs.org/api/http.html#http_class_http_server).
 
-**HTTP Request**
+### **HTTP Request**
 The HTTP server request object (not the client request object) has all the information about the incoming request to our server. Here's the list of main properties:
 
 - `request.headers`: Information about incoming requests headers such as Connection, Host, Authorization, etc (see list [here](https://en.wikipedia.org/wiki/List_of_HTTP_header_fields))
@@ -106,7 +106,7 @@ The HTTP server request object (not the client request object) has all the infor
 
 To process the request body, use tha same Event Emitter pattern as with the request client (listen to data event and collect in a buffer variable).
 
-**HTTP Response**
+### **HTTP Response**
 The [HTTP response](https://nodejs.org/api/http.html#http_class_http_serverresponse) is what enables us to send data back to the clients from our Node servers.
 `response.writeHead` is a method that is used to set the status code and create HTTP headers.
 The response itself is created with the `write()` method which adds data to the response. Another method is `end()` which finishes the response (which in turn will finish the incoming request). You can set the `statusCode` attribute to change the status code of the response (200, 400, 500, etc.).
@@ -123,21 +123,32 @@ For example, to install a package called `superagent`:
 3. In a file where you want to use `superagent`, import it: `const superagent = require('superagent')`.
 ## There are two ways to install a module:
 1. **Locally:** most of your projects' dependencies which you import with `require()`, e.g., `express`, `request`, `hapi`. They go into the `node_modules` directory of your local project
-  `npm install module-name`
-  `npm i module-name`
+
+```bash
+npm install module-name
+npm i module-name
+```
+
 2. **Globally:** command-line tools only (mostly), e.g., `mocha`, `grunt`, `slc`. They go into `/usr/local`
 
-    `npm install --global module-name`
-    `npm i -g module-name`
-  
+```bash
+npm install --global module-name
+npm i -g module-name
+```
+
 Also you can specify versions: 
 
 - Exact version installation:
 
-      `npm install express@4.2.0`
+```bash
+npm install express@4.2.0
+```
 
 - Latest version installation, which can be useful when you already have this module but want to upgrade to the latest module:
-  `npm install express@latest`
+
+```bash
+npm install express@latest
+```
 
 Semantic versioning consists of using three digits which have certain meaning. For example, in semver 4.2.0, 4 is major, 2 is minor and 0 is patch. Major is for major releases which most often break existing code. Minor are for small releases which can break some code but most often are okay. Patch is for small fixes which should not change the main interface and *should* not break your applications.
 
@@ -194,12 +205,13 @@ It has the following sections in order top-bottom:
 
 None of the configurations are mandatory. Configuration is defined (set) via the `set` method where the first argument is the name and the second is the value:
 
-
-    const express = require('express')
-    const app = express()
-    app.set('port', process.env.PORT || 3000)
-    app.set('views', 'templates') // The directory the templates are stored in
-    app.set('view engine', 'jade')
+```javascript
+const express = require('express')
+const app = express()
+app.set('port', process.env.PORT || 3000)
+app.set('views', 'templates') // The directory the templates are stored in
+app.set('view engine', 'jade')
+```
 ## Middleware
 
 The Middleware pattern is a series of processing units connected together, where the output of one unit is the input for the next one.  The middleware pattern implements continuity. The request is coming from a client and a response is sent back to the client.
@@ -213,10 +225,10 @@ There are two types of middlewares:
 1. npm modules, e.g., `body-parser` from npm used with `app.use(bodyParser.json())`
 2. Custom middleware, e.g., `app.use((req, res, next)=>{next()})`
 
-**Passing References**
+### **Passing References**
 `request` is **always** the same object in the lifecycle of a single client request to the Express server. This allows us to implement a very useful pattern in which developers pass data from one middleware to another and to a request handler.
 
-**Request Body**
+### **Request Body**
 There's body-parser npm module which allows to access the request body information. Just install `body-parser` and enable the `json()` and `urlencoded()` middleware to convert raw form data into JSON.
 
 
@@ -395,9 +407,11 @@ In addition, it has built-in validation and type casting that can be extended an
 
 A Mongoose Schema is a JSON-ish class that has information about properties/field types of a document. It also can store information about validation and default values, and whether a particular property is required. Schemas can contain business logic and other important information. In other words, schemas serve as blueprints for documents. They are needed for model creation.
 
-    const bookSchema = mongoose.Schema({
-      name: String
-    })
+```javascript
+const bookSchema = mongoose.Schema({
+  name: String
+})
+```
 
 Supported data types:
 
@@ -412,25 +426,27 @@ Supported data types:
 
 Example: 
 
-    const ObjectId = mongoose.Schema.Types.ObjectId,
-      Mixed = mongoose.Schema.Types.Mixed
-    const bookSchema = mongoose.Schema({
-      name: String,
-      created_at: Date,
-      updated_at: {type: Date, default: Date.now},
-      published: Boolean,
-      authorId : { type: ObjectId, required: true },
-      description: { type: String, default: null },
-      active: {type: Boolean, default: false},
-      keywords: { type: [ String ], default: [] }
-      description: {
-        body: String,
-        image: Buffer
-      },
-      version: {type: Number, default: function() {return 1;}},
-      notes: Mixed,
-      contributors: [ObjectId]
-    })
+```javascript
+const ObjectId = mongoose.Schema.Types.ObjectId,
+  Mixed = mongoose.Schema.Types.Mixed
+const bookSchema = mongoose.Schema({
+  name: String,
+  created_at: Date,
+  updated_at: {type: Date, default: Date.now},
+  published: Boolean,
+  authorId : { type: ObjectId, required: true },
+  description: { type: String, default: null },
+  active: {type: Boolean, default: false},
+  keywords: { type: [ String ], default: [] }
+  description: {
+    body: String,
+    image: Buffer
+  },
+  version: {type: Number, default: function() {return 1;}},
+  notes: Mixed,
+  contributors: [ObjectId]
+})
+```
 
 It’s also possible to create and use custom types (email, urls), see [mongoose-types](https://github.com/bnoguchi/mongoose-types)
 
@@ -438,43 +454,45 @@ It’s also possible to create and use custom types (email, urls), see [mongoose
 
 Mongoose allows us to define/write getters (`get)`, setters (`set`), and defaults (`default`) right in the Schema! Same goes for validate and some other useful methods.
 
-    const postSchema = new mongoose.Schema({
-      slug: { 
-        type: String, 
-        set: function(slug) { 
-          return slug.toLowerCase()
-        }
-      },
-      numberOfLikes: {
-        type: Number,
-        get: function(value) {
-          return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-        }
-      },  
-      posted_at: { 
-        type: String, 
-        get: function(value) { 
-          if (!value) return null;
-          return value.toUTCString()
-        }
-      },  
-      authorId: { 
-        type: ObjectId, 
-        default: function() { 
-          return new mongoose.Types.ObjectId() 
-        } 
-      },
-      email: { 
-        type: String, 
-        unique: true, 
-        validate: [ 
-          function(email) {
-            return (email.match(/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:<a href="?:[a-z0-9-]*[a-z0-9]" title="" target="_blank">a-z0-9</a>?\.)+<a href="?:[a-z0-9-]*[a-z0-9]" title="" target="_blank">a-z0-9</a>?/i) != null)}, 
-          'Invalid email'
-        ] 
-      }
-      })
-
+```javascript
+const postSchema = new mongoose.Schema({
+  slug: { 
+    type: String, 
+    set: function(slug) { 
+      return slug.toLowerCase()
+    }
+  },
+  numberOfLikes: {
+    type: Number,
+    get: function(value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    }
+  },  
+  posted_at: { 
+    type: String, 
+    get: function(value) { 
+      if (!value) return null;
+      return value.toUTCString()
+    }
+  },  
+  authorId: { 
+    type: ObjectId, 
+    default: function() { 
+      return new mongoose.Types.ObjectId() 
+    } 
+  },
+  email: { 
+    type: String, 
+    unique: true, 
+    validate: [ 
+      function(email) {
+        return (email.match(/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:<a href="?:[a-z0-9-]*[a-z0-9]" title="" target="_blank">a-z0-9</a>?\.)+<a href="?:[a-z0-9-]*[a-z0-9]" title="" target="_blank">a-z0-9</a>?/i) != null)}, 
+      'Invalid email'
+    ] 
+  }
+  })
+```
+   
 Another approach:
 
 1. Use `Schema.path(name)` to get `SchemaType` ([official docs](http://mongoosejs.com/docs/api.html#schema_Schema-path)).
@@ -482,11 +500,13 @@ Another approach:
 
 For example,
 
-    userSchema.path('numberOfPosts')
-      .get(function(value) {
-        if (value) return value
-        return this.posts.length
-      })
+```javascript
+userSchema.path('numberOfPosts')
+  .get(function(value) {
+    if (value) return value
+    return this.posts.length
+  })
+```
 
 *Note: Path is just a fancy name for the nested field name and its parent objects, for example if we have ZIP code (*`*zip*`*) as a child of* `*contact.address*` *such as* `*user.contact.address.zip, the*` *the* `*contact.address.zip*` *is a path.*
 
@@ -494,12 +514,16 @@ For example,
 
 To compile a schema into a model, use `mongoose.model(name, schema)`—for example:
 
-    let Book = mongoose.model('Book', bookSchema)
+```javascript
+let Book = mongoose.model('Book', bookSchema)
+```
 
 Models are used to create documents (actual data). To do so, call `new ModelName(data)`—for example:
 
-    let practicalNodeBook = new Book({ name: 'Practical Node.js' })
-    let javascriptTheGoodPartsBook = new Book({ name: "JavaScript The Good Parts"})
+```javascript
+let practicalNodeBook = new Book({ name: 'Practical Node.js' })
+let javascriptTheGoodPartsBook = new Book({ name: "JavaScript The Good Parts"})
+```
 
 **Model Methods**
 For the complete list refer to [the official Documentation](http://mongoosejs.com/docs/api.html#model-js).
@@ -551,36 +575,37 @@ To create a new user document or to save a post to an existing user when working
 
 ## Relationships and Join with Population
 
-Mongoose provides a feature called *population*. It allows us to fill certain parts of the document from a different collection. Let’s say we have `posts` and `users`collections. We can reference posts in the user schema:
+Mongoose provides a feature called *population*. It allows us to fill certain parts of the document from a different collection. Let’s say we have `posts` and `users` collections. We can reference posts in the user schema:
 
-    const mongoose = require('mongoose'),
-      Schema = mongoose.Schema
-      
-    const userSchema = Schema({
-      _id     : Number,
-      name: String,
-      posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }]
-    };
-    
-    const postSchema = Schema({
-      _creator: { type: Number, ref: 'User' },
-      title: String,
-      text: String
-    })
-    
-    let Post  = mongoose.model('Post', postSchema)
-    let User = mongoose.model('User', userSchema)
-    
-    User.findOne({ name: /azat/i }) //or .find({})
-      .populate('posts')
-    //  .populate({     
-    //    path: 'posts',
-    //    select: 'title', //return only certain fields
-    //    match: {text: /node\.js/i}, //filter populated results by query
-    //    options: { limit: 10, sort: 'title' } //limit the number of posts
-    //  })
-      .exec(function (err, user) {
-        if (err) return handleError(err)
-        console.log('The user has % post(s)', user.posts.length)
-      })
+```javascript
+const mongoose = require('mongoose'),
+  Schema = mongoose.Schema
 
+const userSchema = Schema({
+  _id     : Number,
+  name: String,
+  posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }]
+};
+
+const postSchema = Schema({
+  _creator: { type: Number, ref: 'User' },
+  title: String,
+  text: String
+})
+
+let Post  = mongoose.model('Post', postSchema)
+let User = mongoose.model('User', userSchema)
+
+User.findOne({ name: /azat/i }) //or .find({})
+  .populate('posts')
+//  .populate({     
+//    path: 'posts',
+//    select: 'title', //return only certain fields
+//    match: {text: /node\.js/i}, //filter populated results by query
+//    options: { limit: 10, sort: 'title' } //limit the number of posts
+//  })
+  .exec(function (err, user) {
+    if (err) return handleError(err)
+    console.log('The user has % post(s)', user.posts.length)
+  })
+```
